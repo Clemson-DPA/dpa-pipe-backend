@@ -1,0 +1,8 @@
+
+# include the requirements of the production dpa-server environment
+-r production_server.txt 
+
+
+# development related packages
+django-debug-toolbar==1.0
+

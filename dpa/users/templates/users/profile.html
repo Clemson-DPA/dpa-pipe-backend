@@ -1,0 +1,43 @@
+
+{% extends "_site/base.html" %}
+
+<!-- title -->
+{% block title %}
+    DPA User: {{ profile_user.username }}
+{% endblock %}
+
+
+<!-- content -->
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <h1>
+                <span class="glyphicon glyphicon-user"></span>
+                {{ profile_user.get_full_name }}
+                <small>
+                    {{ profile_user.username }}
+                    <a href="mailto:{{ profile_user.email }}">
+                        <span class="glyphicon glyphicon-envelope"></span>
+                    </a>
+                </small>
+            </h1>
+            <span style="vertical-align:middle">
+                <span class="glyphicon glyphicon-time"></span>
+                Joined {{ profile_user.date_joined }}
+                &nbsp;&nbsp;
+                {% with is_active=profile_user.is_active %}
+                    <span class='label label-{{ is_active|yesno:"success,default"}}'>
+                        {{ is_active|yesno:"ACTIVE,INACTIVE"}}
+                    </span>
+                {% endwith %}
+            </span>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,126 @@
+
+{% extends "_site/base.html" %}
+
+<!-- title -->
+{% block title %}
+    DPA User Login
+{% endblock %}
+
+<!-- navbar -->
+{% block login_active %}
+    active
+{% endblock %}
+
+{% block navbar_login %}
+    <!-- nothing, no login in navbar on this page -->
+    <ul class="nav navbar-nav navbar-right">
+        <li class="active">
+            <a href="#" title="Login">
+                <span class="glyphicon glyphicon-user">
+                    Login
+                </span>
+            </a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row clearfix">
+    <div class="col-md-4 column">
+<!-- 
+        <fieldset>
+
+            <legend>
+                <span class="glyphicon glyphicon-user"></span>
+            Login
+            </legend>
+
+            <form method="post" action="{% url 'auth:login' %}">
+            {% csrf_token %}
+
+                
+                <div class="control-group">
+                    <div class="controls">
+                        <input name="username" type="text" class="form-control input-sm" placeholder="username" autofocus="autofocus">
+                        <br>
+                    </div>
+                </div>
+                {% if form.errors and form.username.errors %}
+                    {% for error in form.username.errors %}
+                        <div class="alert alert-danger">
+                            <font style="font-size:1.5em; vertical-align:middle;">
+                                <span class="glyphicon glyphicon-exclamation-sign"></span>
+                            </font>
+                            <tt>username:</tt> {{error}}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <div class="control-group">
+                    <div class="controls">
+                        <input name="password" type="password" class="form-control input-sm" placeholder="password">
+                        <br>
+                    </div>
+                </div>
+                {% if form.errors and form.password.errors %}
+                    {% for error in form.password.errors %}
+                        <div class="alert alert-danger">
+                            <font style="font-size:1.5em; vertical-align:middle;">
+                                <span class="glyphicon glyphicon-exclamation-sign"></span>
+                            </font>
+                            <tt>password:</tt> {{error}}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                
+                <div class="control-group">
+                    <div class="controls">
+                        <button type="submit" class="btn btn-sm">Login</button>
+                    </div>
+                </div>
+
+                {% if next %}
+                    <input type="hidden" name="next" value="{{ next }}" />
+                {% endif %}
+            </form>
+
+        </fieldset>
+
+    <br>
+
+    {% if form.errors %}
+       <div id="form-error">
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        <table cellspacing="10">
+                          <tr>
+                            <td align="right" style="padding:12px;">
+                                <font style="font-size:1.5em; vertical-align:middle;">
+                                    <span class="glyphicon glyphicon-exclamation-sign"></span>
+                                </font>
+                            </td>
+                            <td align="left">
+                                {{error}}
+                            </td>
+                          </tr>
+                        </table>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+    {% endif %}
+
+    </div>
+
+    <div class="col-md-8 column">
+    </div> -->
+
+</div>
+
+{% endblock %}
+

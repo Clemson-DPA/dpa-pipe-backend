@@ -1,0 +1,206 @@
+{% extends "_site/base.html" %}
+{% load staticfiles %}
+{% load mptt_tags %}
+{% load ptasks_extras %}
+
+<!-- title -->
+{% block title %}
+DPA {{ ptask.ptask_type }}: {{ ptask.spec }}
+{% endblock %}
+
+<!-- CSS -->
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/mix_custom.css' %}" rel="stylsheet">
+{% endblock %}
+
+<!-- content -->
+{% block content %}
+<div class="container">    
+  <div class="row-fluid">
+    <div class="col-md-12">
+      <div class="page-header">
+        <div class="row">
+        <div class="col-md-9">
+        <h1>
+          <span class="label label-{{ ptask.ptask_type }}">
+              {{ ptask.ptask_type }}</span>
+          <span>{{ ptask.name }}   </span>
+        </h1>
+        </div>
+        <div class="col-md-3">
+          <div class="text-right"><br><br>
+            <small><span class="badge">Priority {{ ptask.priority }}</span></small><br>
+            {{ ptask.status|get_status_label }}<br>
+            <a href="{% url 'ptasks:ptask_update' ptask.pk %}">Edit</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-12">
+          {% if not ptask.is_root_node %}
+            {{ ptask|get_breadcrumbs }}
+          {% endif %}
+          <blockquote>{{ ptask.description }} </blockquote>
+        </div>
+      </div>
+
+      </div>
+    </div>
+    <br>
+
+    <div class="container-fluid">
+      <div class="row">
+
+        <div class="col-xs-12 col-sm-8 col-md-9"> <!-- left side of the info -->
+          {% if versions %}
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <h3 class="panel-title">
+                <span class="glyphicon glyphicon-list"></span>
+                &nbsp; Versions
+              </h3>
+            </div>
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Description</th>
+                  <th>Location</th>
+                  <th>Creator</th>
+                  <th>Created</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for v in versions %}
+                <tr>
+                  <td>{{ v.number }}</td>
+                  <td>{{ v.description }}</td>
+                  <td>{{ v.location }}</td>
+                  <td>{{ v.creator }}</td>
+                  <td>{{ v.created|date }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="5">
+                    No versions to list.
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <br>
+          {% endif %}
+          
+          {% if not ptask.is_leaf_node %}
+          <div id="Container">
+            <div class="control-bar">
+            <div class="control-grp col-xs-12 col-sm-12 col-md-4">
+              <label>Sort:</label>
+              <div class="btn-group">
+                <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                  By Due Date <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#" class="sort" data-sort="due:asc">Asc</a></li>
+                  <li><a href="#" class="sort" data-sort="due:desc">Desc</a></li>
+                </ul>
+              </div>
+              <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                  By Name <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#" class="sort" data-sort="name:asc">Asc</a></li>
+                  <li><a href="#"class="sort" data-sort="name:desc">Desc</a></li>
+                </ul>
+              </div>
+              </div>
+            </div>
+            <div class="control-grp col-xs-12 col-sm-12 col-md-8">
+              <label>Filter:</label>
+              <div class="btn-group">
+              <button type="button" class="btn btn-default filter" data-filter="all">All</span>
+              <button type="button" class="btn btn-primary filter" data-filter=".status-0">Ready</span>
+              <button type="button" class="btn btn-info filter" data-filter=".status-1">In Progress</span>
+              <button type="button" class="btn btn-success filter" data-filter=".status-2">Completed</span>
+              <button type="button" class="btn btn-warning filter" data-filter=".status-3">On Hold</span>
+            </div>
+            </div>
+            </div>
+            {% for c in ptask.get_children %}
+              {% url 'ptasks:ptask_detail' c.pk as clink %}
+              <div class="mix col-md-3 col-sm-6 col-xs-12 status-{{ c.status }}" 
+                data-name="{{ c.name }}" 
+                data-due="{{ c.due_date }}">
+                <div class="mixInner"><a href="{{ clink }}">{{ c.name }}</a></div>
+              </div>
+            {% endfor %}
+            <div class="clearfix"></div>
+          </div>
+          <br>
+        {% endif %}
+        </div> <!-- end of left side column -->
+
+        <div class="col-xs-12 col-sm-4 col-md-3"> <!-- right side info -->
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">
+                <span class="glyphicon glyphicon-calendar"></span>
+                &nbsp; Important Dates
+              </h3>
+            </div>
+            <ul class="list-group">
+              <li class="list-group-item">
+                <b>Today:</b> {{ today }}
+              </li>
+              <li class="list-group-item">
+                <b>Start:</b> {{ ptask.start_date }}
+                {{ days_since|get_dayssince_label:ptask.active }}
+              </li>
+              <li class="list-group-item">
+                <b>End:</b> {{ ptask.due_date }}
+                {{ days_left|get_daysleft_label:ptask.active }}
+              </li>
+            </ul>
+          </div>
+          <br/>
+          
+          {% if users %}
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">
+                <span class="glyphicon glyphicon-user"></span>
+                &nbsp; Assigned Users
+              </h3>
+            </div>
+            <ul class="list-group">
+              {% for u in users %}
+                <li class="list-group-item">
+                {% if u.active %}
+                <span class="glyphicon glyphicon-ok"></span>
+                {% else %}
+                <span class="glyphicon glyphicon-remove"></span>
+                {% endif %}
+                &nbsp; {{ u.user.email }}
+                </li>
+              {% empty %}
+                <li class="list-group-item">No Users Assigned</li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+        </div> <!-- end of right side info -->
+
+      </div> <!-- end of 2nd row -->
+    </div> <!-- end of inner container -->
+  </div> <!-- end of outer row -->
+</div> <!-- end of outer container -->
+{% endblock %}
+{% block extra_js %}
+<script type="text/javascript" src="{% static 'js/jquery.mixitup.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/mix_custom.js' %}">
+</script>
+{% endblock %}

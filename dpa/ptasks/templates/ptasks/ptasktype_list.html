@@ -1,0 +1,58 @@
+
+{% extends "_site/base.html" %}
+
+<!-- title -->
+{% block title %}
+    DPA PTask Types list
+{% endblock %}
+
+<!-- navbar -->
+{% block home_active %}
+    active
+{% endblock %}
+
+<!-- content -->
+
+{% block content %}
+
+<div class="container">
+
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <h1>
+                Production Task Types <small> | shown in the recommended hierarchy</small>
+            </h1>
+            <hr>
+        </div>
+    </div>
+
+        <div class="row clearfix">
+            <div class="col-md-8 column">
+
+            {% if ptasktype_list %}
+
+              {% for pt in ptasktype_list %}
+
+                <div class="panel panel-info " style="margin-left:{% widthratio pt.level_hint 1 25 %}px">
+                    <div class="panel-heading"><strong>{{ pt.name }}</strong></div>
+                    <div class="panel-body">{{ pt.description }}</div>
+                </div>
+              {% endfor %}
+            {% else %}
+                <P>No ptask type found.</P>
+            {% endif %}
+
+            </div>
+            <div class="col-md-4 column">
+                <div class="alert alert-info" role="alert">
+                     <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                     &nbsp;<strong>Need another ptask type?</strong><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        Contact your project's pipeline team.
+                </div>
+            </div>
+        </div>
+
+</div>
+
+{% endblock %}

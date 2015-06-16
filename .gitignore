@@ -1,0 +1,19 @@
+# Ignore my (gguerre) test server sh because I'm lazy
+#bin/test_server.sh
+
+# Ignore compiled python files
+*.py[cod]
+
+# Ignore vim temporary and swap files
+*~
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+
+# Ignore any deployment specific files
+deploy/
+
+# Ignore documentation build
+docs/build
+
+# ignore vagrant directory
+.vagrant

@@ -1,0 +1,73 @@
+
+{% extends "_site/base.html" %}
+
+<!-- title -->
+{% block title %}
+    DPA Locations
+{% endblock %}
+
+<!-- navbar -->
+{% block loc_active %}
+    active
+{% endblock %}
+
+<!-- content -->
+
+{% block content %}
+<div class="container">
+
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <h1>
+                Locations<small>&nbsp;&nbsp;where the pipeline is running</small>
+            </h1>
+        </div>
+    </div>
+
+    {% if location_list %}
+
+        <div class="row clearfix">
+
+            {% for loc in location_list %}
+
+                <div class="col-md-4 column">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <table width="100%">
+                            <tr>
+                            <td>
+                            <h3 class="panel-title">{{ loc.name }}</h3>
+                            </td>
+                            <td align="right">
+                            <span class='label label-{{ loc.active|yesno:"success,default"}}'>
+                                {{ loc.active|yesno:"ACTIVE,INACTIVE"}}
+                            </span>
+                            </td>
+                            </tr>
+                            </table>
+                        </div>
+                        <div class="panel-body">
+                            {{ loc.description }}
+                            <hr style="margin: 1.0em auto;">
+                            <div class="google-maps">
+                                <iframe 
+                                    src={% url "locations:loc_map" loc.code %}
+                                    frameborder="0" 
+                                    style="border:0">
+                                </iframe> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+        <P>No locations found.</P>
+    {% endif %}
+
+</div>
+
+{% endblock %}

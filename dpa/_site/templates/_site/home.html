@@ -1,0 +1,53 @@
+
+{% extends "_site/base.html" %}
+
+<!-- title -->
+{% block title %}
+    DPA Pipeline Home
+{% endblock %}
+
+<!-- navbar -->
+{% block home_active %}
+    active
+{% endblock %}
+
+<!-- content -->
+ --> 
+{% block content %}
+
+<div class="container">
+  <div class="row clearfix">
+    <div class="col-md-4 column">
+
+    {% if form.errors %}
+       <div id="form-error">
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        <table cellspacing="10">
+                          <tr>
+                            <td align="right" style="padding:12px;">
+                                <font style="font-size:1.5em; vertical-align:middle;">
+                                    <span class="glyphicon glyphicon-exclamation-sign"></span>
+                                </font>
+                            </td>
+                            <td align="left">
+                                {{error}}
+                            </td>
+                          </tr>
+                        </table>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+    {% endif %}
+
+    </div>
+
+    <div class="col-md-8 column">
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,251 @@
+{% load static from staticfiles %}
+
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- meta name="description" content="" -->
+    <!-- meta name="author" content="" -->
+    <!-- link rel="shortcut icon" href="../../assets/ico/favicon.ico" -->
+
+    <title>
+        {% block title %}
+            TITLE
+        {% endblock %}
+    </title>
+
+    <!-- bootstrap core CSS -->
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'bootstrap/css/bootstrap-theme.min.css' %}" rel="stylesheet">
+
+    <!-- site-wide custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+    {% block extra_css %}
+        <!-- any custom CSS for the page being loaded -->
+    {% endblock %}
+</head>
+
+<body>
+
+    {% block nav %}
+
+    {% url 'site:home' as url_home %}
+    {% url 'locations:loc_list' as url_loc %}
+    <!-- ptasks, users -->
+
+    <div class="navbar navbar-inverse navbar-static-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+
+            <!-- mobile nav bar toggle -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            </div>
+
+            <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="{% block home_active %}inactive{% endblock %}">
+                    <a href="{{ url_home}}" title="Home">
+                        <span class="glyphicon glyphicon-home">
+                            Home
+                        </span>
+                    </a>
+                </li>
+                <li class="{% block ptask_active %}inactive{% endblock %}">
+                    <a href="{{ url_ptask }}" title="Tasks">
+                        <span class="glyphicon glyphicon-tasks">
+                            PTasks
+                        </span>
+                    </a>
+                </li>
+                <li class="{% block loc_active %}inactive{% endblock %}">
+                    <a href="{{ url_loc }}" title="Locations">
+                        <span class="glyphicon glyphicon-map-marker">
+                            Locations
+                        </span>
+                    </a>
+                </li>
+            </ul>
+            {% if user.is_authenticated %}
+            {% block navbar_login %}
+
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span class="glyphicon glyphicon-user"></span>
+                            &nbsp;&nbsp;
+                            {{ user.username }}
+                            &nbsp;
+                            <b class="caret"></b>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="{% url 'users:profile' user.username %}">
+                                    <span class="glyphicon glyphicon-user">
+                                        Profile
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="{{ url_user }}" title="Users">
+                                    <span class="glyphicon glyphicon-user">
+                                        User
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="{% url 'auth:logout' %}" title="Logout user: {{ user.username }}">
+                                    <span class="glyphicon glyphicon-log-out">
+                                        Logout
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+            </ul>
+
+            {% endblock %}
+            {% endif %}
+
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block login%}
+        <div class="container">
+            <div class="row clearfix">
+            <div class="col-md-4 column">
+                {% if not user.is_authenticated %}
+                <fieldset>
+
+                    <legend>
+                        <span class="glyphicon glyphicon-user"></span>
+                    Login
+                    </legend>
+
+                    <form method="post" action="{% url 'auth:login' %}">
+                    {% csrf_token %}
+
+                        <!-- username -->
+                        <div class="control-group">
+                            <div class="controls">
+                                <input name="username" type="text" class="form-control input-sm" placeholder="username" autofocus="autofocus">
+                                <br>
+                            </div>
+                        </div>
+                        {% if form.errors and form.username.errors %}
+                            {% for error in form.username.errors %}
+                                <div class="alert alert-danger">
+                                    <font style="font-size:1.5em; vertical-align:middle;">
+                                        <span class="glyphicon glyphicon-exclamation-sign"></span>
+                                    </font>
+                                    <tt>username:</tt> {{error}}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        <!-- password -->
+                        <div class="control-group">
+                            <div class="controls">
+                                <input name="password" type="password" class="form-control input-sm" placeholder="password">
+                                <br>
+                            </div>
+                        </div>
+                        {% if form.errors and form.password.errors %}
+                            {% for error in form.password.errors %}
+                                <div class="alert alert-danger">
+                                    <font style="font-size:1.5em; vertical-align:middle;">
+                                        <span class="glyphicon glyphicon-exclamation-sign"></span>
+                                    </font>
+                                    <tt>password:</tt> {{error}}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <!-- submit button -->
+                        <div class="control-group">
+                            <div class="controls">
+                                <button type="submit" class="btn btn-sm">Login</button>
+                            </div>
+                        </div>
+
+                        {% if next %}
+                            <input type="hidden" name="next" value="{{ next }}" />
+                        {% endif %}
+                    </form>
+
+                </fieldset>
+                {% endif %}
+            <br>
+
+            {% if form.errors %}
+               <div id="form-error">
+                    {% if form.non_field_errors %}
+                        {% for error in form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                <table cellspacing="10">
+                                  <tr>
+                                    <td align="right" style="padding:12px;">
+                                        <font style="font-size:1.5em; vertical-align:middle;">
+                                            <span class="glyphicon glyphicon-exclamation-sign"></span>
+                                        </font>
+                                    </td>
+                                    <td align="left">
+                                        {{error}}
+                                    </td>
+                                  </tr>
+                                </table>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div> 
+
+            {% endif %}
+
+            </div>
+
+
+        </div>
+    {% endblock %}
+
+
+
+
+    <!-- page content -->
+    {% block content %}
+        CONTENT
+    {% endblock %}
+
+    <!-- footer block -->
+    {% block footer %}
+        {% include "_site/footer.html" %}
+    {% endblock %}
+
+    <!-- Bootstrap core JavaScript -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript"
+        src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">
+    </script>
+    <script type="text/javascript"
+        src="{% static 'bootstrap/js/bootstrap.min.js' %}">
+    </script>
+    {% block extra_js %}
+      <!-- for extra js scripts in other templates -->
+    {% endblock %}
+</body>
+
+</html>
+
